@@ -28,6 +28,12 @@ let cities = [{
     city: "Phoenix",
     state: "AZ",
     population: 1660272
+  },
+  {
+    location: [30.2666, -97.7333],
+    city: "Austin",
+    state: "TX",
+    population: 965872
   }
   ];
   
