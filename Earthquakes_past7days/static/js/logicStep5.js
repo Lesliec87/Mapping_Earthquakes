@@ -40,13 +40,13 @@ let map = L.map('mapid', {
 L.control.layers(baseMaps).addTo(map);
 
 // Accessing the Toronto airline routes GeoJSON URL.
-let eathquakes = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
+let eathquake = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 // Accessing the airport GeoJSON URL
 // let airportData = "https://raw.githubusercontent.com/Lesliec87/Mapping_Earthquakes/Mapping_GeoJSON_Points/majorAirports.json";
 
 // Grabbing our GeoJSON data.
-d3.json(eathquakes).then(function(data) {
+d3.json(eathquake).then(function(data) {
      
     console.log(data);
     // This function returns the style data for each of the earthquakes we plot on
@@ -99,7 +99,39 @@ d3.json(eathquakes).then(function(data) {
         layer.bindPopup("<h2>" + "Magnitude" + ": " + feature.properties.mag + "</h2> <hr> <h3>" + "Location" + ": " + feature.properties.place + "</h3>");
        }
     }).addTo(earthquakes);
-});
+    earthquakes.addTo(map);
+
+    // Here we create a legend control object.
+    let legend = L.control({
+      position: "bottomright"
+    });
+    
+    // Then add all the details for the legend.
+    legend.onAdd = function() {
+      let div = L.DomUtil.create("div", "info legend");
+
+      const magnitudes = [0, 1, 2, 3, 4, 5];
+      const colors = [
+        "#98ee00",
+        "#d4ee00",
+        "#eecc00",
+        "#ee9c00",
+        "#ea822c",
+        "#ea2c2c"
+      ];
+      // Looping through our intervals to generate a label with a colored square for each interval.
+      for (var i = 0; i < magnitudes.length; i++) {
+        console.log(colors[i]);
+        div.innerHTML +=
+          "<i style='background: " + colors[i] + "'></i> " +
+          magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
+        }
+        return div;
+      };
+   
+    legend.addTo(map);
+
+  });
 
 // Create the earthquake layer for our map.
 let earthquakes = new L.layerGroup();
